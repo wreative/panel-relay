@@ -25,10 +25,13 @@ cd panel-relay
 pnpm install
 ```
 
-### 3. Set environment variable
-Create a `.env` file or set the environment variable in your shell:
+
+### 3. Set environment variables
+Create a `.env` file or set the environment variables in your shell:
 ```
-DISCORD_WEBHOOK_URL=your_discord_webhook_url
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/xxxx
+# (Optional) Whitelisted IPs, comma or semicolon separated
+WHITELISTED_IPS=123.123.123.123,111.111.111.111
 ```
 
 ### 4. Development mode
