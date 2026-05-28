@@ -1,0 +1,8 @@
+{
+  "name": "discord-relay",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@vercel/node": "^5.3.24"
+  }
+}
