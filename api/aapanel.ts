@@ -1,4 +1,4 @@
-import { relayAaPanel } from "../src/core/relay.ts";
+import { relayAaPanel } from "../src/core/relay.js";
 
 export default async function handler(
   req: any,

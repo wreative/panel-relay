@@ -1,8 +1,29 @@
 import { env } from "../config/env.js";
-import { extract } from "../utils/extract.js";
 import { sendDiscordWebhook } from "../services/discord.service.js";
 
 import type { AaPanelPayload } from "../types/aapanel.js";
+
+function extract(
+  text: string,
+  patterns: RegExp[]
+): string {
+  for (const regex of patterns) {
+    const match = text.match(regex);
+
+    if (match?.[1]) {
+      return match[1].trim();
+    }
+  }
+
+  return "N/A";
+}
+
+function cleanText(text: string): string {
+  return text
+    .replace(/<[^>]*>/g, "")
+    .replace(/\r/g, "")
+    .trim();
+}
 
 export async function relayAaPanel(
   body: AaPanelPayload
@@ -20,74 +41,99 @@ export async function relayAaPanel(
     };
   }
 
-  const aaText = body.content.text;
+  const aaText = cleanText(
+    body.content.text
+  );
+
+  const server = extract(aaText, [
+    /Server:(.*)/i,
+    /🖥️\s*Server:(.*)/i,
+  ]);
+
+  const ip = extract(aaText, [
+    /IP(?:Address)?:(.*)/i,
+    /🌐\s*IP:(.*)/i,
+  ]);
+
+  const loginMethod = extract(aaText, [
+    /Login method:(.*)/i,
+  ]);
+
+  const loginAccount = extract(aaText, [
+    /Login account:(.*)/i,
+  ]);
+
+  const loginIp = extract(aaText, [
+    /Login IP:(.*)/i,
+  ]);
+
+  const location = extract(aaText, [
+    /Location[:：](.*)/i,
+  ]);
+
+  const loginStatus = extract(aaText, [
+    /Login status:(.*)/i,
+  ]);
+
+  const isSuccess =
+    loginStatus
+      .toLowerCase()
+      .includes("success");
 
   const discordPayload = {
     embeds: [
       {
-        title: "[aaPanel Alert]",
-        description: aaText,
+        title: isSuccess
+          ? "✅ aaPanel Login Success"
+          : "🚨 aaPanel Login Alert",
+
+        color: isSuccess
+          ? 0x57f287
+          : 0xed4245,
+
         timestamp: new Date().toISOString(),
-        color: 0xf04747,
 
         fields: [
           {
-            name: "Server",
-            value: extract(
-              aaText,
-              /Server:(.*?)\n/
-            ),
+            name: "🖥️ Server",
+            value: server,
             inline: true,
           },
           {
-            name: "IP Address",
-            value: extract(
-              aaText,
-              /IPAddress:(.*?)\n/
-            ),
+            name: "🌐 IP Address",
+            value: ip,
             inline: true,
           },
           {
-            name: "Login Method",
-            value: extract(
-              aaText,
-              /Login method:(.*?)\n/
-            ),
+            name: "🔐 Login Method",
+            value: loginMethod,
             inline: true,
           },
           {
-            name: "Login Account",
-            value: extract(
-              aaText,
-              /Login account:(.*?)\n/
-            ),
+            name: "👤 Login Account",
+            value: loginAccount,
             inline: true,
           },
           {
-            name: "Login IP",
-            value: extract(
-              aaText,
-              /Login IP:(.*?)\n/
-            ),
+            name: "📡 Login IP",
+            value: loginIp,
             inline: true,
           },
           {
-            name: "Location",
-            value: extract(
-              aaText,
-              /Location[:：](.*?)\n/
-            ),
+            name: "📍 Location",
+            value: location,
             inline: true,
           },
           {
-            name: "Login Status",
-            value: extract(
-              aaText,
-              /Login status:(.*?)\n/
-            ),
-            inline: true,
+            name: "📋 Status",
+            value: loginStatus,
+            inline: false,
           },
         ],
+
+        footer: {
+          text: "Panel Relay • Security Monitoring",
+        },
       },
     ],
   };
