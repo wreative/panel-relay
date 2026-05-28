@@ -1,12 +1,10 @@
 {
-  "name": "discord-relay",
+  "name": "panel-relay",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --watch dist/server.js",
-    "build": "tsc",
-    "start": "node dist/server.js"
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
