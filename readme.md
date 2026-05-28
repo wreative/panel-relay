@@ -3,11 +3,13 @@
 A simple relay service for forwarding aaPanel alert payloads to Discord via webhook.
 
 ## Features
+
 - Receives aaPanel alert payloads (HTTP POST)
 - Extracts relevant fields from the alert
 - Forwards formatted alert to a Discord channel using webhook
 
 ## Requirements
+
 - Node.js v18 or later
 - pnpm (or npm/yarn)
 - Discord webhook URL
@@ -15,42 +17,50 @@ A simple relay service for forwarding aaPanel alert payloads to Discord via webh
 ## Getting Started
 
 ### 1. Clone the repository
+
 ```sh
 git clone https://github.com/wreative/panel-relay.git
 cd panel-relay
 ```
 
 ### 2. Install dependencies
+
 ```sh
 pnpm install
 ```
 
-
 ### 3. Set environment variables
+
 Create a `.env` file or set the environment variables in your shell:
-```
+
+```sh
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/xxxx
 # (Optional) Whitelisted IPs, comma or semicolon separated
 WHITELISTED_IPS=123.123.123.123,111.111.111.111
 ```
 
 ### 4. Development mode
+
 Run the relay in development mode (TypeScript, hot-reload):
+
 ```sh
 pnpm run dev
 ```
 
 ### 5. Build for production
+
 ```sh
 pnpm run build
 ```
 
 ## API Endpoint
+
 - **POST** `/api/aapanel`
   - Accepts aaPanel alert payload in the request body
   - Forwards alert to Discord
 
-#### Example Request
+### Example Request Payload
+
 ```json
 {
   "msg_type": "alert",
@@ -61,7 +71,8 @@ pnpm run build
 ```
 
 ## Project Structure
-```
+
+```sh
 api/                # API route handler
 src/
   config/           # Environment config
@@ -73,4 +84,5 @@ src/
 ```
 
 ## License
-MIT
+
+This project is licensed under the [MIT](https://opensource.org/licenses/MIT) license.
